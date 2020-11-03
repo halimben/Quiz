@@ -1,0 +1,31 @@
+{
+  "db_config" : {
+    "user": "uapv1600436",
+    "password": "qm9tG9",
+    "server": "pedago.univ-avignon.fr",
+    "database": "etd",
+    "port": 5432
+  },
+
+  "server_config" : {
+    "server" : "localhost",
+    "port" : 3201
+  },
+
+  "base_url": "localhost",
+
+  "ResponseData" : {
+    "error" : {
+      "state" : false,
+      "message" : ""
+    },
+    "data":{}
+  },
+
+  "mongo_config" : {
+    "store": {
+      "uri": "mongodb://127.0.0.1:27017/db",
+      "collection": "mySessions3200"
+    }
+  }
+}

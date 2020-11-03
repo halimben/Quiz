@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html ng-app="monApp">
+    
+<head>
+	<title>MonQuiz</title>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+
+
+	<script src="app/controllers/UserController.js"></script>
+	<script src="app/services/Authenticate.js"></script>
+	<script src="app/app.js"></script>
+
+
+<!------ Include the above in your HEAD tag ---------->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+		<link rel="stylesheet" href="css/index.css">
+
+</head>
+<!--Coded with love by Mutiullah Samim-->
+<body >
+  <div ng-controller="gameController" ng-show="Connect">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Halim</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#" ng-click="button_quiz()">Quiz <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" ng-click="button_profil()">Profil</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Historique
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+            <div>
+              <button type="button" class="btn btn-danger" ng-click = "logout()">Deconnexion</button>
+            </div>
+      </div>
+    </nav>
+    <div class="alert alert-success page-alert" ng-show="afficher"> {{dateDerniereConnexion}}
+          <button type="button" class="close" ng-click="Close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+    </div>   
+<!-- 
+  <div class="alert alert-success alert-dismissible" id = "bandeau" ng-show = "Connecte">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong ng-bind = "dateDerniereConnexion"></strong>
+  </div> -->
+
+
+  
+
+
+
+
+          <!-- Partie Quiz -->
+          <div ng-show="quizCon" class="container tbd tbd_quiz text-center" ng-controller="quiz_controlleur">
+               <!-- Formulaire Jeu -->
+                  <form ng-show="afficher_form_quiz" class="container col-lg-offset-1 form-horizontal">
+                    Jouez ! Choisisez un théme et un niveau:</br><br>
+                    <div class="form-group">
+                         <label class="sr-only" for="liste_theme">Théme : </label>
+                         <select class="form-control input-lg" id="liste_theme" name="liste_theme" ng-model="theme_choisi" required autofocus>
+                              <option disabled value="" selected hidden>choisissez un théme</option>
+                              <option ng-repeat="theme in themes" value="{{theme}}">{{theme}}</option>
+                         </select>
+                    </div>
+                    <div class="form-group">
+                         <label class="sr-only" for="niveau_theme">Niveau : </label>
+                         <select class="form-control input-lg" id="niveau_theme" name="niveau_theme" ng-model="niveau_choisi" required>
+                              <option disabled value="" selected hidden>choisissez un niveau</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                         </select>
+                    </div><br>
+                    <button class="btn btn-primary btn-lg" ng-click="jouer()">Jouer</button>
+                  </form>
+
+
+
+
+               <!-- Partie Question -->
+               <div class="container" name="question_div" ng-show="afficher_question">
+                    <div name="chrono">Temps de jeu :
+                         <span name="minute" ng-bind="minute"></span>:
+                         <span name="seconde" ng-bind="seconde"></span>
+                    </div>
+                    <span>Réponse correcte : </span>
+                      <span name="score" ng-bind="score"></span><br><br><br>
+                      <span name=question ng-bind="question"></span><br><br>
+                    <div class=" reponses_radio">
+                         <div class="btn-group btn-group-justified" role="group"  ng-repeat="reponse in reponses">
+                              <button class="btn btn-default btn-lg" name="id_button" ng-click=" onClick(reponse,reponse_correct)">{{reponse}}</button>
+                         </div>
+                    </div>
+               </div>
+
+          </div> 
+
+
+                    <!-- Partie profile -->
+          <div ng-show="afficher_profile" ng-controller="BC_profile_controlleur">
+               <div class="tbd tbd_profile container text-center">
+                    <div class="container">
+  <!--                        <figure>
+                              <img src="" alt="avatar du user" id="img-circle"><br>&nbsp;<i ng-click="modifier_avatar()" class="fas fa-edit"></i>
+                         </figure> -->
+                         <h2><strong ng-bind="nom"></strong> <span ng-bind="prenom"></span></h2><i ng-click="modifier_nom()" class="fas fa-edit"></i><br><br>
+                         <h4>Identifiant : <span ng-bind="identifiant"></span></h4>
+                         <p ><strong>A/C status: </strong><span class="tags" id="user-status">Active</span></p>
+                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 divider text-center"></div><br>
+                         <div class="row">
+                              <div class="col-lg-6 left">
+                                   <h6><p><strong ng-bind="date_de_naissance"></strong></p><!-- <i ng-click="modifier_date()" class="fas fa-edit"></i> --></h6>
+                                   <p><small class="label label-success">Date de naissance : </small></p>
+                              </div>
+                              <div class=" col-lg-6 right">
+                                   <h6><p><strong ng-bind="dereniere_connex"></strong></p></h6>
+                                   <p> <small class="label label-warning">Date de derniere connexion</small></p>
+                              </div>
+                         </div>
+                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 divider text-center"></div><br>
+                         <div class="row">
+                              <div class="col-lg-6 left">
+                                   <h4><p><strong ng-bind="nbr_jeu"></strong></p></h4>
+                                   <p><small class="label label-success">Nombre de parties jouée</small></p>
+                              </div>
+                              <div class=" col-lg-6 right">
+                                   <h4><p><strong ng-bind="meilleure_score"></strong></p></h4>
+                                   <p> <small class="label label-warning">Meilleure scores :</small></p>
+                              </div>
+                         </div>
+                    </div>
+                    <br><br><br>
+                    <div class="container">
+                         <div class="row" >
+                              <h3>Historique :</h3>
+                        </div>
+                        <div class="container-hist">
+                             <div class="row">
+                                  <div class="col-lg-3">
+                                       <h6><strong>Date : </strong></h6>
+                                  </div>
+                                  <div class="col-lg-3">
+                                       <h6><strong>Reponses correcte :</strong></h6>
+                                  </div>
+                                  <div class="col-lg-3">
+                                       <h6><strong>Score : </strong></h6>
+                                  </div>
+                                  <div class="col-lg-3">
+                                       <h6><strong>Temps : </strong></h6>
+                                  </div><br>
+                             </div>
+                              <div class="row" ng-repeat="line in result">
+                                   <div class="col-lg-3">
+                                        <span ng-bind="line.date | date:'dd/MM/yyyy hh:mm'"></span>
+                                   </div>
+                                   <div class="col-lg-3">
+                                      <span ng-bind="line.nbreponse"></span>
+                                </div>
+                                <div class="col-lg-3">
+                                     <span ng-bind="line.score"></span>
+                                </div>
+                                <div class="col-lg-3">
+                                     <span ng-bind="line.temps"></span>
+                                </div>
+                           </div>
+                      </div>
+                 </div>
+            </div>
+       </div>       
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<div class="container h-100" ng-controller="userController" ng-hide = "Connecte">
+		<div class="d-flex justify-content-center h-100">
+			<div class="user_card">
+				<div class="d-flex justify-content-center">
+					<div class="brand_logo_container">
+						<img src="css/img/qz.png" class="brand_logo" alt="Logo">
+					</div>
+				</div>
+				<div class="d-flex justify-content-center form_container" >
+					<form ng-submit="login()" >
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fas fa-user"></i></span>
+							</div>
+							<input type="text" name="username" ng-model="username" class="form-control input_user" value="" placeholder="utilisateur">
+						</div>
+						<div class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fas fa-key"></i></span>
+							</div>
+							<input type="password" name="password" ng-model="password" class="form-control input_pass" value="" placeholder="mot de passe">
+						</div>
+						<div class="form-group">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="customControlInline">
+								<label class="custom-control-label" for="customControlInline">Se souvenir de moi</label>
+							</div>
+						</div>
+              <center>
+               <div id = "bandeau" ng-show="echoue" class="isa_error">
+                 <i class="fa fa-times-circle"></i>
+                           <span id="bnd" ng-bind = "bandeau" ></span>
+              </div>
+              </center>
+            <div class="d-flex justify-content-center mt-3 login_container">
+              <button type="submit" class="btn login_btn">Se connecter</button>
+            </div>
+          </form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

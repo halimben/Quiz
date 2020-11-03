@@ -1,0 +1,28 @@
+{
+  "name": "mean",
+  "version": "1.0.0",
+  "description": "architecture pour MEAN",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "angular-route": "^1.7.5",
+    "body-parser": "^1.18.3",
+    "connect-mongodb-session": "^2.0.3",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "localstorage": "^1.0.1",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.6",
+    "node-localstorage": "^1.3.1",
+    "nodemon": "^1.18.4",
+    "pg": "^7.4.3",
+    "session": "^0.1.0",
+    "sha1": "^1.1.1",
+    "socket.io": "^2.1.1"
+  }
+}
